@@ -1,7 +1,8 @@
 // aqui exportaras las funciones que necesites
 
-import { GoogleAuthProvider } from 'firebase/auth';
+// import { GoogleAuthProvider } from 'firebase/auth';
 import {
+  // eslint-disable-next-line max-len
   auth, createUserWithEmailAndPassword, updateProfile, saveUser, provider, signInWithPopup, signInWithEmailAndPassword,
 } from './initializeFirebase.js';
 // eslint-disable-next-line max-len
@@ -14,15 +15,13 @@ export const registerWithEmail = (email, password, displayName) => createUserWit
     return saveUser({ userId: uId, Email: email, name: displayName });
   });
 
-export const signInWithGoogle = () => {
-  return signInWithPopup(auth, provider);
-  // nos da acceso al Google Access Token. lo podemos usar para acceder al google API.
-  const credential = GoogleAuthProvider.credentialFromResult(result);
-  // agregamos el signed-in en la informacion del usuario
-  const user = result.user;
-};
+export const signInWithGoogle = () => signInWithPopup(auth, provider)
+// nos da acceso al Google Access Token. lo podemos usar para acceder al google API.
+// const credential = GoogleAuthProvider.credentialFromResult(result);
+// agregamos el signed-in en la informacion del usuario
+// const user = result.user;
+// eslint-disable-next-line semi-style
+;
 
-export const signInWithPassword = (email, password) =>
-{
-  return signInWithEmailAndPassword(auth, email, password);
-};
+// eslint-disable-next-line max-len
+export const signInWithPassword = (email, password) => signInWithEmailAndPassword(auth, email, password);

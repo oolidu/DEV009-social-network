@@ -1,4 +1,3 @@
-import { GoogleAuthProvider } from 'firebase/auth';
 import { registerWithEmail, signInWithGoogle } from '../lib/index';
 
 function registro(navigateTo) {
@@ -10,7 +9,7 @@ function registro(navigateTo) {
 
   const inputName = document.createElement('input');
   inputName.className = 'input displayName';
-  inputName.setAttribute('type', 'name');
+  inputName.setAttribute('type', 'text');
   inputName.setAttribute('placeholder', 'Nombre de Usuario');
   inputName.setAttribute('required', '');
 
@@ -52,7 +51,7 @@ function registro(navigateTo) {
   textRegistrateCon.className = 'parrafo';
   textRegistrateCon.textContent = 'O registrate con...';
 
-  buttonRegistro.addEventListener('click', () => {
+  buttonRegistro.addEventListener('click', ()   {
     const emailValue = inputEmail.value;
     const nameValue = inputName.value;
     const passwordValue = inputPass.value;
@@ -74,7 +73,7 @@ function registro(navigateTo) {
       userInfo.password,
       userInfo.name,
     )
-      .then((user) => {
+      .then(() => {
         navigateTo('/principal');
       })
       .catch((error) => {
@@ -115,19 +114,15 @@ function registro(navigateTo) {
 
   buttonGoogle.addEventListener('click', () => {
     signInWithGoogle()
-      .then((result) => {
+      .then(() => {
         navigateTo('/principal');
       })
       .catch((error) => {
         console.log('estes es', error);
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
         // el correo de la cuenta del usuario.
-        const email = error.customData.email;
         // la credencial Auth que fue usada.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        navigateTo('/'); // si nos marca error nos manda al home
+        // si nos marca error nos manda al home
       });
   });
   return divRegister;
