@@ -7,25 +7,28 @@ function registro(navigateTo) {
   const logoBon = document.createElement('img');
   logoBon.className = 'logoBon';
 
+  const formRegistro = document.createElement('form');
+  formRegistro.className = 'formRegistro';
   const inputName = document.createElement('input');
   inputName.className = 'input displayName';
   inputName.setAttribute('type', 'text');
   inputName.setAttribute('placeholder', 'Nombre de Usuario');
-  inputName.setAttribute('required', '');
+  inputName.required = true;
 
   const inputEmail = document.createElement('input');
   inputEmail.className = 'input inputEmail';
   inputEmail.setAttribute('type', 'email');
   inputEmail.setAttribute('placeholder', 'Correo electronico');
-  inputEmail.setAttribute('required', '');
+  inputEmail.required = true;
 
   const inputPass = document.createElement('input');
   inputPass.className = 'input inputPass';
   inputPass.setAttribute('type', 'password');
   inputPass.setAttribute('placeholder', 'Crea tu contraseña');
-  inputPass.setAttribute('required', '');
+  inputPass.required = true;
 
-  const buttonRegistro = document.createElement('button');
+  const buttonRegistro = document.createElement('input');
+  buttonRegistro.setAttribute('type', 'submit');
   buttonRegistro.className = 'button buttonSignInRegistro';
   buttonRegistro.textContent = 'Registro';
 
@@ -46,32 +49,20 @@ function registro(navigateTo) {
   strong.className = 'textGoogle';
   const imgGoogle = document.createElement('img');
   imgGoogle.className = 'imgGoogle';
-
   const textRegistrateCon = document.createElement('p');
   textRegistrateCon.className = 'parrafo';
   textRegistrateCon.textContent = 'O registrate con...';
 
-  buttonRegistro.addEventListener('click', ()   {
+  formRegistro.addEventListener('submit', (e) => {
+    e.preventDefault();
     const emailValue = inputEmail.value;
     const nameValue = inputName.value;
     const passwordValue = inputPass.value;
 
-    if (nameValue === '') {
-      errorRegister.style.display = 'block';
-      errorRegister.textContent = 'Los campos no puede estar vacíos';
-      return;
-    }
-
-    const userInfo = {
-      email: emailValue,
-      name: nameValue,
-      password: passwordValue,
-    };
-
     registerWithEmail(
-      userInfo.email,
-      userInfo.password,
-      userInfo.name,
+      emailValue,
+      passwordValue,
+      nameValue,
     )
       .then(() => {
         navigateTo('/principal');
@@ -84,17 +75,10 @@ function registro(navigateTo) {
         } else if (errorCode === 'auth/invalid-email') {
           errorRegister.style.display = 'block';
           errorRegister.textContent = 'Email invalido';
-        } else if (errorCode === 'auth/missing-email') {
-          errorRegister.style.display = 'block';
-          errorRegister.textContent = 'Falta colocar correo';
         } else if (errorCode === 'auth/email-already-in-use') {
           errorRegister.style.display = 'block';
           errorRegister.textContent = 'El correo electrónico ya se encuentra registrado';
-        } else if (errorCode === 'auth/internal-error') {
-          errorRegister.style.display = 'block';
-          errorRegister.textContent = 'Falta colocar contraseña';
         }
-        console.log(error.code);
         return error;
       });
   });
@@ -104,9 +88,8 @@ function registro(navigateTo) {
   });
 
   divRegister.appendChild(logoBon);
-  divRegister.append(inputName, inputEmail, inputPass);
-  divRegister.appendChild(errorRegister);
-  divRegister.appendChild(buttonRegistro);
+  divRegister.appendChild(formRegistro);
+  formRegistro.append(inputName, inputEmail, inputPass, errorRegister, buttonRegistro);
   divRegister.appendChild(textRegistrateCon);
   divRegister.appendChild(buttonGoogle);
   buttonGoogle.append(imgGoogle, strong);
@@ -117,12 +100,8 @@ function registro(navigateTo) {
       .then(() => {
         navigateTo('/principal');
       })
-      .catch((error) => {
-        console.log('estes es', error);
-        // Handle Errors here.
-        // el correo de la cuenta del usuario.
-        // la credencial Auth que fue usada.
-        // si nos marca error nos manda al home
+      .catch(() => {
+        navigateTo('/'); // si nos marca error nos manda al home
       });
   });
   return divRegister;

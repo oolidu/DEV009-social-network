@@ -12,15 +12,16 @@ function login(navigateTo) {
   inputEmail.className = 'input inputEmail';
   inputEmail.setAttribute('type', 'email');
   inputEmail.setAttribute('placeholder', 'Correo electronico');
-  inputEmail.setAttribute('required', '');
+  inputEmail.required = true;
   const modal = document.getElementById('modal');
   const modalMessage = document.getElementById('modalMessage');
-  
+  const closeModalButton = document.getElementById('closeModal');
+
   const inputPass = document.createElement('input');
   inputPass.className = 'input inputPass';
   inputPass.setAttribute('type', 'password');
   inputPass.setAttribute('placeholder', 'Ingresa tu contraseña');
-  inputPass.setAttribute('required', '');
+  inputPass.required = true;
 
   const buttonLogin = document.createElement('input');
   buttonLogin.className = 'button buttonLogin';
@@ -49,39 +50,41 @@ function login(navigateTo) {
   textRegistrateCon.className = 'parrafo';
   textRegistrateCon.textContent = 'O ingresa con...';
 
-  buttonReturn.addEventListener('click', () => {
+  buttonReturn.addEventListener('click', (event) => {
+    event.preventDefault();
     navigateTo('/');
   });
 
   divLogin.append(logoBon, formLogin);
-  formLogin.append(inputEmail, inputPass, errorMessageL, buttonLogin);
+  formLogin.append(inputEmail, inputPass, buttonLogin);
+  divLogin.appendChild(errorMessageL);
   divLogin.appendChild(textRegistrateCon);
   divLogin.appendChild(buttonGoogle);
   buttonGoogle.append(imgGoogle, strong);
   divLogin.appendChild(buttonReturn);
 
-  formLogin.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  formLogin.addEventListener('submit', (event) => {
+    event.preventDefault();
     const emailValue = inputEmail.value;
     const passwordValue = inputPass.value;
-    try {
-      await signInWithPassword(emailValue, passwordValue);
-      navigateTo('/principal');
-    } catch (catchError) {
-      modal.style.display = 'block';
-      modalMessage.textContent = 'Error al iniciar sesión';
-      // eslint-disable-next-line no-console
-      console.catchError('Error al iniciar sesión', catchError);
-    }
+    signInWithPassword(emailValue, passwordValue)
+      .then(() => {
+        navigateTo('/principal');
+      })
+      .catch((catchError) => {
+        modal.style.display = 'block';
+        modalMessage.textContent = 'Error al iniciar sesión. Verifica tus credenciales.';
+        console.error('Error al iniciar sesión:', catchError);
+      });
   });
 
-  /*const closeModalButton = document.getElementById('closeModal');
   closeModalButton.addEventListener('click', (event) => {
     event.preventDefault();
     modal.style.display = 'none';
-  });*/
+  });
 
-  buttonGoogle.addEventListener('click', () => {
+  buttonGoogle.addEventListener('click', (event) => {
+    event.preventDefault();
     signInWithGoogle()
       .then(() => {
         navigateTo('/principal');
